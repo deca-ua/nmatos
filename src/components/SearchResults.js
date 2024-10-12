@@ -13,7 +13,7 @@ const SearchResults = ({ lyrics, searched, previewUrl }) => {
       <div className="col-6">
         {searched && (
           previewUrl ? (
-            <audio controls src={previewUrl} className="w-100 mt-3" />
+            <audio data-testid="audio-element" controls src={previewUrl} className="w-100 mt-3" />
           ) : (
             <p className="text-muted">No preview available</p>
           )
@@ -26,7 +26,7 @@ const SearchResults = ({ lyrics, searched, previewUrl }) => {
 SearchResults.propTypes = {
   lyrics: PropTypes.string.isRequired,
   searched: PropTypes.bool.isRequired,
-  previewUrl: PropTypes.string.isRequired,
+  previewUrl: PropTypes.string, // Make previewUrl optional
 };
 
 export default SearchResults;
