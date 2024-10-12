@@ -1,6 +1,6 @@
-// src/components/SelectInput.js
 import React from "react";
 import Select from "react-select";
+import PropTypes from 'prop-types';
 
 const SelectInput = ({ options, placeholder, value, onChange, onInputChange }) => {
   return (
@@ -14,6 +14,14 @@ const SelectInput = ({ options, placeholder, value, onChange, onInputChange }) =
       isClearable
     />
   );
+};
+
+SelectInput.propTypes = {
+  options: PropTypes.array.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  value: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func,
 };
 
 export default SelectInput;

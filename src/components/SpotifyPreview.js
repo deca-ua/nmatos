@@ -1,5 +1,5 @@
-// src/components/SpotifyPreview.js
 import React from "react";
+import PropTypes from 'prop-types';
 
 const SpotifyPreview = ({ previewUrl }) => {
   return (
@@ -11,6 +11,10 @@ const SpotifyPreview = ({ previewUrl }) => {
       )}
     </div>
   );
+};
+
+SpotifyPreview.propTypes = {
+  previewUrl: PropTypes.string.isRequired,
 };
 
 export default SpotifyPreview;

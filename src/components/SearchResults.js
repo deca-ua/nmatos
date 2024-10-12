@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const SearchResults = ({ lyrics, searched, previewUrl }) => {
   return (
@@ -20,6 +21,12 @@ const SearchResults = ({ lyrics, searched, previewUrl }) => {
       </div>
     </div>
   );
+};
+
+SearchResults.propTypes = {
+  lyrics: PropTypes.string.isRequired,
+  searched: PropTypes.bool.isRequired,
+  previewUrl: PropTypes.string.isRequired,
 };
 
 export default SearchResults;

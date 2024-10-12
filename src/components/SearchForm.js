@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import PropTypes from "prop-types";
 
 const SearchForm = ({
   artist,
@@ -81,6 +82,24 @@ const SearchForm = ({
       </div>
     </div>
   );
+};
+
+
+SearchForm.propTypes = {
+  artist: PropTypes.string.isRequired,
+  setArtist: PropTypes.func.isRequired,
+  song: PropTypes.string.isRequired,
+  setSong: PropTypes.func.isRequired,
+  artistOptions: PropTypes.array.isRequired,
+  songOptions: PropTypes.array.isRequired,
+  fetchArtistSuggestions: PropTypes.func.isRequired,
+  fetchSongsForArtist: PropTypes.func.isRequired,
+  setSongOptions: PropTypes.func.isRequired,
+  setLyrics: PropTypes.func.isRequired,
+  setPreviewUrl: PropTypes.func.isRequired,
+  setArtistOptions: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };
 
 export default SearchForm;

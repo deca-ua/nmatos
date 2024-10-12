@@ -1,5 +1,6 @@
-// src/components/LyricsDisplay.js
 import React from "react";
+import PropTypes from 'prop-types';
+
 
 const LyricsDisplay = ({ lyrics }) => {
   return (
@@ -7,6 +8,10 @@ const LyricsDisplay = ({ lyrics }) => {
       <pre className="text-lg text-primary whitespace-pre-wrap">{lyrics}</pre>
     </div>
   );
+};
+
+LyricsDisplay.propTypes = {
+  lyrics: PropTypes.string.isRequired,
 };
 
 export default LyricsDisplay;
