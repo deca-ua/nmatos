@@ -5,6 +5,8 @@ import Axios from "axios"; // Import Axios
 import { getSpotifyToken, searchSpotifyTrack } from "./spotifyService";
 import SearchForm from "./components/SearchForm";
 import SearchResults from "./components/SearchResults";
+import React from "react";
+
 
 function App() {
   const [artist, setArtist] = useState("");

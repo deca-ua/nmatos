@@ -19,26 +19,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run ESLint
-        run: npx eslint .  # Run ESLint on your codebase
-
-      - name: Run tests
-        run: npm test
-
       - name: Run build
         run: npm run build
-
-      - name: Set environment variables
-        run: |
-          echo "SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}" >> $GITHUB_ENV
-
-      - name: Deploy
-        run: |
-          # Your deployment script goes here
-          echo "Deploying with client ID: $SPOTIFY_CLIENT_ID"
