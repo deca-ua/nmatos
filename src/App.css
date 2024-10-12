@@ -1,0 +1,17 @@
+/* App.css */
+body {
+  font-family: 'Arial', sans-serif; /* Optional: Set your preferred font */
+}
+
+pre {
+  font-size: 18px;
+  color: #007bff; /* Bootstrap primary color */
+  white-space: pre-wrap; /* Ensure long text wraps */
+}
+
+.alert {
+  font-size: 1.2em;
+  background-color: #ffcc00;
+  color: #333;
+  border-radius: 0.5rem;
+}
