@@ -17,30 +17,30 @@ const SearchForm = ({
   setArtistOptions,
   loading,
   handleSearch,
+  setAlignment,
 }) => {
   return (
     <div>
       <Select
-  className="mb-3"
-  placeholder="Artist name"
-  options={artistOptions}
-  value={artistOptions.find((option) => option.value === artist) || null}
-  onChange={(option) => {
-    if (option) {
-      setArtist(option.value);
-      fetchSongsForArtist(option.value); // Fetch songs for selected artist
-    } else {
-      setArtist("");
-    }
-    setSong(""); // Clear song when artist changes
-    setSongOptions([]); // Clear song options when artist changes
-  }}
-  onInputChange={(input) => {
-    fetchArtistSuggestions(input);
-  }}
-  isClearable
-/>
-
+        className="mb-3"
+        placeholder="Artist name"
+        options={artistOptions}
+        value={artistOptions.find((option) => option.value === artist) || null}
+        onChange={(option) => {
+          if (option) {
+            setArtist(option.value);
+            fetchSongsForArtist(option.value); // Fetch songs for selected artist
+          } else {
+            setArtist("");
+          }
+          setSong(""); // Clear song when artist changes
+          setSongOptions([]); // Clear song options when artist changes
+        }}
+        onInputChange={(input) => {
+          fetchArtistSuggestions(input);
+        }}
+        isClearable
+      />
 
       <Select
         className="mb-3"
@@ -75,6 +75,7 @@ const SearchForm = ({
             setPreviewUrl(null);
             setArtistOptions([]); // Clear artist options
             setSongOptions([]); // Clear song options
+            setAlignment("align-items-center");
           }}
         >
           Clear All
@@ -83,7 +84,6 @@ const SearchForm = ({
     </div>
   );
 };
-
 
 SearchForm.propTypes = {
   artist: PropTypes.string.isRequired,
@@ -100,6 +100,7 @@ SearchForm.propTypes = {
   setArtistOptions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   handleSearch: PropTypes.func.isRequired,
+  setAlignment: PropTypes.func.isRequired,
 };
 
 export default SearchForm;
