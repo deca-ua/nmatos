@@ -1,5 +1,5 @@
 import Axios from "axios";
-import process from "process"; // Add this import statement
+import process from "process";
 
 // Function to retrieve a Spotify token using Client Credentials flow
 export const getSpotifyToken = async () => {

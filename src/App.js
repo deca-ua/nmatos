@@ -23,7 +23,11 @@ function App() {
   const YOUR_SPACE_ID = process.env.REACT_APP_YOUR_SPACE_ID;
   const YOUR_ACCESS_TOKEN = process.env.REACT_APP_YOUR_ACCESS_TOKEN;
 
-  // This effect should always run, regardless of `page` being present or not
+  console.log("Space ID:", process.env.REACT_APP_YOUR_SPACE_ID);
+  console.log("Access Token:", process.env.REACT_APP_YOUR_ACCESS_TOKEN);
+  
+
+  // Fetch blog post data from Contentful
   useEffect(() => {
     const query = `{
       blogPostCollection {
@@ -42,38 +46,35 @@ function App() {
       }
     }`;
 
-    window
-      .fetch(
-        `https://graphql.contentful.com/content/v1/spaces/${YOUR_SPACE_ID}/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${YOUR_ACCESS_TOKEN}`,
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://graphql.contentful.com/content/v1/spaces/${YOUR_SPACE_ID}/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${YOUR_ACCESS_TOKEN}`,
+            },
+            body: JSON.stringify({ query }),
           },
-          body: JSON.stringify({ query }),
-        },
-      )
-      .then((response) => response.json())
-      .then(({ data, errors }) => {
+        );
+        const { data, errors } = await response.json();
+
         if (errors) {
           console.error(errors);
         } else if (data && data.blogPostCollection) {
           setPage(data.blogPostCollection.items[0]);
         }
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  });
-
-  // This effect also runs unconditionally
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await getSpotifyToken();
-      setSpotifyToken(token);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
-    fetchToken();
-  }, []);
 
+    fetchData();
+  }, [YOUR_SPACE_ID, YOUR_ACCESS_TOKEN]);
+
+  // Fetch Spotify token
   useEffect(() => {
     const fetchToken = async () => {
       const token = await getSpotifyToken();
@@ -245,7 +246,7 @@ function App() {
               className="bg-white rounded shadow p-4 w-100"
               style={{ maxWidth: "600px" }}
             >
-              <h2 className="text-primary mb-3">{page.title}</h2>
+              <h2 className="mb-3 text-center text-danger">{page.title}</h2>
 
               {page.featuredImage && (
                 <div className="text-center mb-4">
@@ -258,21 +259,11 @@ function App() {
                 </div>
               )}
 
-              <p className="text-muted">
+              <p className="text-center">
                 <strong>Artist:</strong> {page.artist} | <strong>Album:</strong>{" "}
                 {page.albumName} | <strong>Release Date:</strong>{" "}
                 {page.releaseDate}
               </p>
-
-              {/* Styled content of the post */}
-              {page.content?.json ? (
-                <div
-                  className="blog-content"
-                  dangerouslySetInnerHTML={{ __html: page.content.json }}
-                />
-              ) : (
-                <p>No content available for this album.</p>
-              )}
             </div>
           )}
         </div>
