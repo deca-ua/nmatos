@@ -1,23 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const SearchResults = ({ lyrics, searched, previewUrl }) => {
   return (
     <div className="row">
       <div className="col-6">
-        <pre className="text-lg text-primary whitespace-pre-wrap">
-          {lyrics}
-        </pre>
+        <pre className="text-lg text-primary whitespace-pre-wrap">{lyrics}</pre>
       </div>
 
       <div className="col-6">
-        {searched && (
-          previewUrl ? (
-            <audio data-testid="audio-element" controls src={previewUrl} className="w-100 mt-3" />
+        {searched &&
+          (previewUrl ? (
+            <audio
+              data-testid="audio-element"
+              controls
+              src={previewUrl}
+              className="w-100 mt-3"
+            />
           ) : (
             <p className="text-muted">No preview available</p>
-          )
-        )}
+          ))}
       </div>
     </div>
   );

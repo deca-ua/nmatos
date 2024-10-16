@@ -1,8 +1,14 @@
 import React from "react";
 import Select from "react-select";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const SelectInput = ({ options, placeholder, value, onChange, onInputChange }) => {
+const SelectInput = ({
+  options,
+  placeholder,
+  value,
+  onChange,
+  onInputChange,
+}) => {
   return (
     <Select
       className="mb-3"

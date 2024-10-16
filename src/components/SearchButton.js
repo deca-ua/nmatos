@@ -1,10 +1,13 @@
 import React from "react";
-import PropTypes from 'prop-types'; // Import PropTypes
-
+import PropTypes from "prop-types"; // Import PropTypes
 
 const SearchButton = ({ onClick, loading, disabled }) => {
   return (
-    <button className="btn btn-danger me-2" onClick={onClick} disabled={disabled}>
+    <button
+      className="btn btn-danger me-2"
+      onClick={onClick}
+      disabled={disabled}
+    >
       {loading ? "Searching..." : "Search"}
     </button>
   );

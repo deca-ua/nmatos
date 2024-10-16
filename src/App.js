@@ -6,7 +6,7 @@ import { getSpotifyToken, searchSpotifyTrack } from "./spotifyService";
 import SearchForm from "./components/SearchForm";
 import SearchResults from "./components/SearchResults";
 import React from "react";
-import process from 'process';
+import process from "process";
 
 function App() {
   const [artist, setArtist] = useState("");
@@ -52,7 +52,7 @@ function App() {
             Authorization: `Bearer ${YOUR_ACCESS_TOKEN}`,
           },
           body: JSON.stringify({ query }),
-        }
+        },
       )
       .then((response) => response.json())
       .then(({ data, errors }) => {
@@ -86,16 +86,16 @@ function App() {
     if (!input) return; // Prevent fetching if the input is empty
     try {
       const response = await Axios.get(
-        `https://api.lyrics.ovh/suggest/${input}`
+        `https://api.lyrics.ovh/suggest/${input}`,
       );
       const uniqueArtists = new Set(
-        response.data.data.map((item) => item.artist.name)
+        response.data.data.map((item) => item.artist.name),
       ); // Filter duplicates
       setArtistOptions(
         [...uniqueArtists].map((artist) => ({
           value: artist,
           label: artist,
-        }))
+        })),
       );
     } catch (error) {
       console.error("Error fetching artist suggestions:", error);
@@ -105,7 +105,7 @@ function App() {
   const fetchSongsForArtist = async (artistName) => {
     try {
       const response = await Axios.get(
-        `https://api.lyrics.ovh/suggest/${artistName}`
+        `https://api.lyrics.ovh/suggest/${artistName}`,
       );
       const songList = response.data.data.map((item) => ({
         value: item.title,
@@ -136,13 +136,11 @@ function App() {
       const timeoutId = setTimeout(() => controller.abort(), 5000);
       const rowTop = document.getElementById("rowTop");
 
-
-
       const response = await fetch(
         `https://api.lyrics.ovh/v1/${artist}/${song}`,
         {
           signal: controller.signal,
-        }
+        },
       );
 
       clearTimeout(timeoutId);
@@ -196,14 +194,18 @@ function App() {
 
   return (
     <div className="container">
-      <div id="rowTop" className="row align-items-center justify-content-around bg-light" style={{ minHeight: "100vh" }}>
+      <div
+        id="rowTop"
+        className="row align-items-center justify-content-around bg-light"
+        style={{ minHeight: "100vh" }}
+      >
         <div className="col-6 d-flex flex-column justify-content-center">
           <div
             className="bg-white rounded shadow p-4 w-100"
             style={{ maxWidth: "600px" }}
           >
             <h1 className="text-center text-danger mb-4">Lyrics Finder</h1>
-  
+
             <SearchForm
               artist={artist}
               setArtist={setArtist}
@@ -227,7 +229,7 @@ function App() {
             />
 
             <hr />
-  
+
             <SearchResults
               lyrics={lyrics}
               searched={searched}
@@ -244,7 +246,7 @@ function App() {
               style={{ maxWidth: "600px" }}
             >
               <h2 className="text-primary mb-3">{page.title}</h2>
-  
+
               {page.featuredImage && (
                 <div className="text-center mb-4">
                   <img
@@ -255,13 +257,13 @@ function App() {
                   />
                 </div>
               )}
-  
+
               <p className="text-muted">
                 <strong>Artist:</strong> {page.artist} | <strong>Album:</strong>{" "}
                 {page.albumName} | <strong>Release Date:</strong>{" "}
                 {page.releaseDate}
               </p>
-  
+
               {/* Styled content of the post */}
               {page.content?.json ? (
                 <div
@@ -277,7 +279,6 @@ function App() {
       </div>
     </div>
   );
-  
 }
 
 export default App;

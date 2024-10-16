@@ -1,27 +1,27 @@
 import Axios from "axios";
-import process from 'process'; // Add this import statement
+import process from "process"; // Add this import statement
 
 // Function to retrieve a Spotify token using Client Credentials flow
 export const getSpotifyToken = async () => {
   const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
-  const authUrl = 'https://accounts.spotify.com/api/token';
+  const authUrl = "https://accounts.spotify.com/api/token";
 
   try {
     const response = await Axios.post(authUrl, null, {
       params: {
-        grant_type: 'client_credentials',
+        grant_type: "client_credentials",
       },
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${btoa(clientId + ':' + clientSecret)}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${btoa(clientId + ":" + clientSecret)}`,
       },
     });
 
     // Return the access token
     return response.data.access_token;
   } catch (error) {
-    console.error('Error retrieving Spotify token:', error);
+    console.error("Error retrieving Spotify token:", error);
     return null;
   }
 };
@@ -43,7 +43,7 @@ export const searchSpotifyTrack = async (token, artist, song) => {
       return null; // No tracks found
     }
   } catch (error) {
-    console.error('Error fetching Spotify track preview:', error);
+    console.error("Error fetching Spotify track preview:", error);
     return null;
   }
 };

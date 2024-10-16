@@ -23,8 +23,6 @@ You may also see any lint errors in the console.
 REACT_APP_SPOTIFY_CLIENT_ID=your_client_id
 REACT_APP_SPOTIFY_CLIENT_SECRET=your_client_secret
 
-
-
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
