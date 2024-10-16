@@ -76,8 +76,10 @@ jobs:
       - name: Notify Myself in Teams
         if: failure() || success()
         run: |
+      - name: Notify Myself in Teams
+        if: failure() || success()
+        run: |
           curl -H "Content-Type: application/json" -d '{
-            "message": "CI Build Result: '${{ job.status }}' on branch '${{ github.ref }}' \n
-            "details": "View details here: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "status": "'${{ job.status }}'"
+            "message": "CI Build Result: '${{ job.status }}' on branch '${{ github.ref }}'. View details here: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           }' "https://prod-140.westeurope.logic.azure.com:443/workflows/6f0e69eda2e7487999064344929457c0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2tp5Q_vk21BUERBJWzDJw62hNP5HntaKBHPULaiUxkc"
+
