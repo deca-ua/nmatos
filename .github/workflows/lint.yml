@@ -24,6 +24,16 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install Dependencies
         run: npm ci
 
@@ -38,3 +48,10 @@ jobs:
 
       - name: Run Tests
         run: npm test
+
+      - name: Notify Myself in Teams
+        if: failure() || success()
+        run: |
+          curl -H "Content-Type: application/json" -d '{
+            "message": "CI Build Result: '${{ job.status }}' on branch '${{ github.ref }}'"
+          }' https://prod-140.westeurope.logic.azure.com:443/workflows/6f0e69eda2e7487999064344929457c0/triggers/manual/paths/invoke?api-version=2016-06-01
