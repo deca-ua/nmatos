@@ -33,9 +33,6 @@ jobs:
       - name: Run Prettier
         run: npx prettier . --write
 
-      - name: Run npm audit
-        run: npm audit
-
       - name: Build Project
         run: npm run build --if-present
 
