@@ -73,6 +73,21 @@ jobs:
       - name: Run Tests
         run: npm test
 
+  deploy:
+    needs: [build, test]  # Wait for both build and test jobs to complete
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Netlify
+        uses: netlify/actions/diff-includes@master
+        with:
+          publish-dir: ./build
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
   notify:
     needs: [build, test]  # Wait for both build and test jobs to complete
     runs-on: ubuntu-latest
