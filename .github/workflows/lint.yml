@@ -46,12 +46,38 @@ jobs:
       - name: Build Project
         run: npm run build --if-present
 
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 18.x]  # Testing against multiple Node.js versions
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
       - name: Run Tests
         run: npm test
 
+  notify:
+    needs: [build, test]  # Wait for both build and test jobs to complete
+    runs-on: ubuntu-latest
+    steps:
       - name: Notify Myself in Teams
         if: failure() || success()
         run: |
           curl -H "Content-Type: application/json" -d '{
-            "message": "CI Build Result: '${{ job.status }}' on branch '${{ github.ref }}'"
+            "message": "CI Build Result: '${{ job.status }}' on branch '${{ github.ref }}' \n
+            "details": "View details here: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "status": "'${{ job.status }}'"
           }' "https://prod-140.westeurope.logic.azure.com:443/workflows/6f0e69eda2e7487999064344929457c0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2tp5Q_vk21BUERBJWzDJw62hNP5HntaKBHPULaiUxkc"
