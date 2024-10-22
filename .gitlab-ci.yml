@@ -1,0 +1,51 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  NODE_VERSIONS: "20 18"
+
+build_test:
+  stage: build
+  parallel:
+    matrix:
+      - NODE_VERSION: "20"
+      - NODE_VERSION: "18"
+  image: node:${NODE_VERSION}
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}-${NODE_VERSION}"
+    paths:
+      - node_modules/
+      - ~/.npm
+      - ~/.cache
+  script:
+    - npm ci
+    - npm run lint
+    - npx prettier . --write
+    - npm run build --if-present
+    - npm test
+  artifacts:
+    paths:
+      - build
+  only:
+    - main
+  except:
+    - tags
+    - merge_requests
+
+deploy:
+  stage: deploy
+  image: node:20
+  needs: 
+    - build_test
+  script:
+    - npm install netlify-cli -g
+    - netlify deploy --prod --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID
+    - |
+      MESSAGE="CI Build Result: $CI_JOB_STATUS on branch $CI_COMMIT_REF_NAME. View details here: $CI_JOB_URL"
+      curl -H "Content-Type: application/json" -d "{\"message\":\"$MESSAGE\"}" "https://prod-140.westeurope.logic.azure.com:443/workflows/6f0e69eda2e7487999064344929457c0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2tp5Q_vk21BUERBJWzDJw62hNP5HntaKBHPULaiUxkc"
+  only:
+    - main
+  except:
+    - tags
+    - merge_requests

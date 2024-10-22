@@ -1,79 +1,117 @@
-# Getting Started with Create React App
+# TDW MiniProject 1A - Continuous Integration and Deployment (CI/CD) Report
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Student:** Nuno Matos - 97915
+**Project URL:** https://gitlab.com/nuno-matos/tdw-mp1-nuno-matos
 
-## Available Scripts
+## 1. Challenge Overview
+The primary challenge of this project was to develop and implement a CI/CD pipeline for a React application using GitHub CI/CD, with replication on another CI/CD platform. The provided project aimed to create a continuous integration pipeline that:
 
-In the project directory, you can run:
+- Validates the code quality using tools like ESLint and Prettier.
+- Tests the application with Jest.
+- Builds and deploys the application using Netlify.
 
-### `npm start`
+Additionally, the pipeline was expected to support parallel execution across multiple Node.js versions and be automated for regular deployments.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 2. Chosen Platforms
+- **GitLab CI/CD:** Chosen for its integrated CI/CD features and compatibility with the team's development workflow. It was configured to manage the primary build, test, and deployment process.
+- **GitHub Actions (Replication):** A similar CI/CD pipeline was replicated on GitHub Actions to compare its performance and workflow efficiency.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 3. Technical Implementation
 
-## Environment Setup
+### 3.1 GitLab CI/CD Pipeline
+The pipeline stages and tasks are detailed below:
 
-1. Create a `.env` file in the root of your project.
-2. Add the following environment variables:
+**Stages:**
 
-.env
-REACT_APP_SPOTIFY_CLIENT_ID=your_client_id
-REACT_APP_SPOTIFY_CLIENT_SECRET=your_client_secret
+**Build:**
+- Installs dependencies.
+- Runs linting with ESLint and formatting with Prettier.
+- Executes tests via Jest.
+- Builds the project.
 
-### `npm test`
+**Deploy:**
+- Deploys the application to Netlify upon successful build.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**GitLab CI Configuration:**
+```yaml
+stages:
+  - build
+  - deploy
 
-### `npm run build`
+variables:
+  NODE_VERSIONS: "20 18"
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+build_test:
+  stage: build
+  parallel:
+    matrix:
+      - NODE_VERSION: "20"
+      - NODE_VERSION: "18"
+  image: node:${NODE_VERSION}
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}-${NODE_VERSION}"
+    paths:
+      - node_modules/
+      - ~/.npm
+      - ~/.cache
+  script:
+    - npm ci
+    - npm run lint
+    - npx prettier . --write
+    - npm run build --if-present
+    - npm test
+  artifacts:
+    paths:
+      - build
+  only:
+    - main
+  except:
+    - tags
+    - merge_requests
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+deploy:
+  stage: deploy
+  image: node:20
+  needs: 
+    - build_test
+  script:
+    - npm install netlify-cli -g
+    - netlify deploy --prod --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID
+    - |
+      MESSAGE="CI Build Result: $CI_JOB_STATUS on branch $CI_COMMIT_REF_NAME. View details here: $CI_JOB_URL"
+      curl -H "Content-Type: application/json" -d "{\"message\":\"$MESSAGE\"}" "https://prod-140.westeurope.logic.azure.com/443/workflows/6f0e69eda2e7487999064344929457c0/triggers/manual/paths/invoke?..."
+  only:
+    - main
+  except:
+    - tags
+    - merge_requests
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
 
-### `npm run eject`
+### 3.2 GitHub Actions (Replication)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+In GitHub Actions, the pipeline was replicated with some configuration changes to ensure parity. Key tasks included building, testing, and deploying the project using the same stages and tools as GitLab.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3.3 Differences Between Platforms
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Integration Speed:** GitHub Actions provided quicker setup and pipeline running time, while GitLab, besides all the tries, still takes a lot more time to run the pipeline.
+- **Tooling Integration:** Both platforms handled linting, testing, and deployment well, but GitHub Actions required more verbose configuration.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 4. Key Challenges
 
-## Learn More
+- **Protected Branches on GitLab:** Encountered restrictions on pushing code to the protected main branch, which required resolving permissions for a successful push.
+- **Pipeline Execution Time:** While GitLab performed well, the pipeline took longer than expected (~4 minutes and 40 seconds). Optimizing caching and reducing unnecessary steps were important for speeding up execution, which led to an improvement in the performance to about 2 minutes and 45 seconds.
+- **Pipeline Exetution at midnight** Every day at midnight, the pipeline is suposed to run.
+- **Pipeline Execution when CMS updated** Every time the CMS Contentful is changed, the pipeline must run, using webhooks.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 5. Learnings
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Node Version Management:** Running the pipeline with different Node.js versions (18 and 20) highlighted compatibility issues early, preventing potential deployment failures.
+- **CI/CD Automation:** Implementing automated triggers (via webhooks) ensured that updates from the CMS (Contentful) would automatically redeploy the site without manual intervention.
+- **Cross-Platform CI/CD:** Replicating the pipeline on both GitLab and GitHub Actions offered valuable insights into the trade-offs between different CI/CD services, especially when optimizing for build times and platform features.
 
-### Code Splitting
+## 6. Conclusion
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This project allowed me to successfully implement a robust CI/CD pipeline using GitLab and replicate most of it on GitHub Actions. The most significant challenges were managing protected branch permissions and optimizing pipeline speed, which were addressed through improved caching and permission management.
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The project not only provided valuable experience with CI/CD but also deepened my understanding of automation tools, versioning, and deployment strategies. Looking forward, I plan to optimize the deployment process further, particularly reducing build times and experimenting with other CI/CD platforms.

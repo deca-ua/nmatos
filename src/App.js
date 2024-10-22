@@ -25,7 +25,6 @@ function App() {
 
   console.log("Space ID:", process.env.REACT_APP_YOUR_SPACE_ID);
   console.log("Access Token:", process.env.REACT_APP_YOUR_ACCESS_TOKEN);
-  
 
   // Fetch blog post data from Contentful
   useEffect(() => {
