@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import LyricsDisplay from "../components/LyricsDisplay"; // Adjust the path as necessary
+import LyricsDisplay from "../components/LyricsDisplay";
 
 describe("LyricsDisplay", () => {
   it("renders the lyrics correctly", () => {

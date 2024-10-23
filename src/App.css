@@ -1,12 +1,11 @@
-/* App.css */
 body {
-  font-family: "Arial", sans-serif; /* Optional: Set your preferred font */
+  font-family: "Arial", sans-serif;
 }
 
 pre {
   font-size: 18px;
-  color: #007bff; /* Bootstrap primary color */
-  white-space: pre-wrap; /* Ensure long text wraps */
+  color: #007bff;
+  white-space: pre-wrap;
 }
 
 .alert {

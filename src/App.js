@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css"; // If you have additional custom CSS
+import "./App.css";
 import { useState, useEffect } from "react";
-import Axios from "axios"; // Import Axios
+import Axios from "axios";
 import { getSpotifyToken, searchSpotifyTrack } from "./spotifyService";
 import SearchForm from "./components/SearchForm";
 import SearchResults from "./components/SearchResults";
@@ -18,13 +18,10 @@ function App() {
   const [spotifyToken, setSpotifyToken] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
   const [searched, setSearched] = useState(false);
-  const [page, setPage] = useState({}); // Initialize to an empty object, not null
+  const [page, setPage] = useState({});
 
   const YOUR_SPACE_ID = process.env.REACT_APP_YOUR_SPACE_ID;
   const YOUR_ACCESS_TOKEN = process.env.REACT_APP_YOUR_ACCESS_TOKEN;
-
-  console.log("Space ID:", process.env.REACT_APP_YOUR_SPACE_ID);
-  console.log("Access Token:", process.env.REACT_APP_YOUR_ACCESS_TOKEN);
 
   // Fetch blog post data from Contentful
   useEffect(() => {
