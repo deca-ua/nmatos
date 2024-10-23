@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import SearchResults from "../components/SearchResults"; // Ensure this path is correct
+import SearchResults from "../components/SearchResults";
 
 describe("SearchResults", () => {
   it("renders lyrics correctly", () => {

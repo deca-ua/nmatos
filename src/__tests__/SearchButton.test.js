@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import SearchButton from "../components/SearchButton"; // Adjust the path as necessary
+import SearchButton from "../components/SearchButton";
 
 describe("SearchButton", () => {
   it("renders with the correct text when not loading", () => {
