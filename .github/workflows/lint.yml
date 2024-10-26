@@ -6,9 +6,9 @@ on:
   pull_request:
     branches: ["main"]
   repository_dispatch:
-    types: [cms_update]  # Custom event type to trigger on CMS updates
+    types: [cms_update] # Custom event type to trigger on CMS updates
   schedule:
-    - cron: '0 23 * * *'  # Runs daily at midnight UTC
+    - cron: "0 23 * * *" # Runs daily at midnight UTC
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 18.x]  # Testing against multiple Node.js versions
+        node-version: [20.x, 18.x] # Testing against multiple Node.js versions
 
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 18.x]  # Testing against multiple Node.js versions
+        node-version: [20.x, 18.x] # Testing against multiple Node.js versions
 
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
         run: npm test
 
   deploy:
-    needs: [build, test]  # Wait for both build and test jobs to complete
+    needs: [build, test] # Wait for both build and test jobs to complete
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -82,14 +82,13 @@ jobs:
       - name: Deploy to Netlify
         uses: netlify/actions/cli@master
         with:
-          publish-dir: ./build
-          production-deploy: true
+          args: deploy --dir=./build --prod # Deploys the build directory to production
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
   notify:
-    needs: [build, test]  # Wait for both build and test jobs to complete
+    needs: [build, test, deploy] # Wait for both build and test jobs to complete
     runs-on: ubuntu-latest
     steps:
       - name: Notify Myself in Teams
